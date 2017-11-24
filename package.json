@@ -20,5 +20,8 @@
   "dependencies": {
     "node-fetch": "^1.7.3",
     "yargs": "^10.0.3"
+  },
+  "repository": {
+    "url": "https://github.com/igorrmotta/fetch-fragment-matcher"
   }
 }
