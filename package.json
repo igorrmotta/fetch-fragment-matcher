@@ -1,0 +1,24 @@
+{
+  "name": "fetch-fragment-matcher",
+  "version": "0.0.1",
+  "description": "Fetch a graphql endpoint to generate the fragmentTypes for apollo-client",
+  "main": "index.js",
+  "scripts": {
+    "test": "node src/index --e http://localhost:8000/graphql --o ./output"
+  },
+  "keywords": [
+    "apollo-client",
+    "IntrospectionFragmentMatcher",
+    "fragmentMatcher",
+    "graphql",
+    "fragments",
+    "fragment-matcher",
+    " heuristic fragment"
+  ],
+  "author": "igorrmotta",
+  "license": "MIT",
+  "dependencies": {
+    "node-fetch": "^1.7.3",
+    "yargs": "^10.0.3"
+  }
+}
