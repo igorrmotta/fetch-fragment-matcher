@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const processArgs = require('./processArgs');
 const fs = require('fs');
 const path = require('path');
