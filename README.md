@@ -13,7 +13,7 @@ Right now, this is something you'll need to do by hand – i.e. if you revise yo
 
 1) Run `fetch-fragment-matcher` with the arguments: 
     * --e (--endpoint): The graphql server endpoint
-    * --o (--output): The output directory
+    * --o (--output): The output directory (or to set full path use --output-file)
 
 2) Set the fragment matcher in apollo-client
 

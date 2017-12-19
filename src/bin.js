@@ -3,6 +3,7 @@
 const yargs = require('yargs');
 const fs = require('fs');
 const path = require('path');
+const process = require('process');
 const { fetchFragmentMatcherData } = require('./index');
 
 const argsOptions = {
@@ -12,9 +13,14 @@ const argsOptions = {
         alias: 'e'
     },
     output: {
-        description: 'Specify the output path where the schema will be created',
+        description: 'Specify the output dir where the schema fragmentTypes.json file will be created',
         type: 'string',
         alias: 'o'
+    },
+    'output-file': {
+        description: 'Specify the output path where the schema will be created',
+        type: 'string',
+        alias: 'of'
     }
 };
 
@@ -34,16 +40,30 @@ if (!processArgs.endpoint) {
 }
 
 if (!processArgs.output) {
-    throw `Please, specify --output or --o`;
+    throw `Please, specify --output or --output-file`;
 }
 
-const OUTPUT_FOLDER = path.resolve(processArgs.output);
 const ENDPOINT_URL = processArgs.endpoint;
+const OUTPUT_FILE = path.resolve(
+    processArgs['output-file']
+        ? processArgs['output-file']
+        : `${processArgs['output']}/fragmentTypes.json`
+);
 
-if (!fs.existsSync(OUTPUT_FOLDER)) {
-    fs.mkdirSync(OUTPUT_FOLDER);
-}
+createDirRecursively(path.dirname(OUTPUT_FILE));
 
-fetchFragmentMatcherData(ENDPOINT_URL, `${OUTPUT_FOLDER}/fragmentTypes.json`)
+fetchFragmentMatcherData(ENDPOINT_URL, OUTPUT_FILE)
     .then(() => { console.log('Fragment types successfully extracted!'); })
     .catch((err) => { console.error('Error writing fragmentTypes file', err); });
+
+function createDirRecursively(dir) {
+    dir
+        .split(path.sep)
+        .reduce((currentPath, folder) => {
+            currentPath += folder + path.sep;
+            if (!fs.existsSync(currentPath)){
+                fs.mkdirSync(currentPath);
+            }
+            return currentPath;
+        }, '');
+}
