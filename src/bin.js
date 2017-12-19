@@ -45,3 +45,5 @@ if (!fs.existsSync(OUTPUT_FOLDER)) {
 }
 
 fetchFragmentMatcherData(ENDPOINT_URL, `${OUTPUT_FOLDER}/fragmentTypes.json`)
+    .then(() => { console.log('Fragment types successfully extracted!'); })
+    .catch((err) => { console.error('Error writing fragmentTypes file', err); });
