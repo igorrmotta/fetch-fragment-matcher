@@ -39,7 +39,7 @@ if (!processArgs.endpoint) {
     throw `Please, specify --endpoint or --e`;
 }
 
-if (!processArgs.output) {
+if (!processArgs['output'] && !processArgs['output-file']) {
     throw `Please, specify --output or --output-file`;
 }
 
