@@ -4,10 +4,10 @@
   "description": "Fetch a graphql endpoint to generate the fragmentTypes for apollo-client",
   "main": "src/index.js",
   "bin": {
-    "fetch-fragment-matcher": "./src/index.js"
+    "fetch-fragment-matcher": "./src/bin.js"
   },
   "scripts": {
-    "test": "node src/index --e http://localhost:8000/graphql --o ./output"
+    "test": "node src/bin --e http://localhost:8000/graphql --o ./output"
   },
   "keywords": [
     "apollo-client",
