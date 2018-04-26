@@ -30,7 +30,6 @@ module.exports.klawSync = klawSync;
 
 module.exports.writeFile = (result, file) => {
     // here we're filtering out any type information unrelated to unions or interfaces
-    console.log(JSON.stringify(result));
     const filteredData = result.__schema.types.filter(
         type => type.possibleTypes !== null
     );
