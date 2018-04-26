@@ -1,6 +1,6 @@
 {
   "name": "fetch-fragment-matcher",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Fetch a graphql endpoint to generate the fragmentTypes for apollo-client",
   "main": "src/index.js",
   "bin": {
