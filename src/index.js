@@ -2,40 +2,50 @@
 
 const fs = require('fs');
 const fetch = require('node-fetch');
+const { graphql } = require('graphql');
+const { makeExecutableSchema } = require('graphql-tools');
+const { klawSync, writeFile } = require('./utils');
+
+const introspectionQuery = `
+{
+  __schema {
+    types {
+      kind
+      name
+      possibleTypes {
+        name
+      }
+    }
+  }
+}
+`;
 
 module.exports.fetchFragmentMatcherData = (url, file) => {
     return fetch(url, {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-            query: `
-        {
-          __schema {
-            types {
-              kind
-              name
-              possibleTypes {
-                name
-              }
-            }
-          }
-        }
-      `,
+            query: introspectionQuery
         }),
     })
-    .then(result => result.json())
-    .then(result => {
-        // here we're filtering out any type information unrelated to unions or interfaces
-        const filteredData = result.data.__schema.types.filter(
-            type => type.possibleTypes !== null
-        );
+        .then(result => result.json())
+        .then(result => writeFile(result.data, file));
+};
 
-        result.data.__schema.types = filteredData;
-
-        fs.writeFile(
-            file,
-            JSON.stringify(result.data),
-            (err) => { if (err) throw err; }
-        );
-    });
+module.exports.getFragmentMatcherData = (path, file) => {
+    return new Promise((resolve, reject) => {
+        try {
+            const files = klawSync(path, /\.(graphql|gql)$/);
+            const typeDefs = files.map(filePath => fs.readFileSync(filePath, 'utf-8')).join('\n');
+            const schema = makeExecutableSchema({ typeDefs });
+            graphql({ schema: schema, source: introspectionQuery })
+                .then(({ data, errors }) => {
+                    writeFile(data, file);
+                    resolve();
+                })
+                .catch((err) => { throw err; });
+        } catch (err) {
+            reject(err);
+        }
+    })
 };

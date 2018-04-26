@@ -1,13 +1,15 @@
 {
   "name": "fetch-fragment-matcher",
-  "version": "0.0.6",
+  "version": "0.1.0",
   "description": "Fetch a graphql endpoint to generate the fragmentTypes for apollo-client",
   "main": "src/index.js",
   "bin": {
-    "fetch-fragment-matcher": "./src/bin.js"
+    "fetch-fragment-matcher": "./src/bin.js",
+    "get-fragment-matcher": "./src/bin.js"
   },
   "scripts": {
-    "test": "node src/bin --e http://localhost:8000/graphql --o ./output"
+    "test-fetch": "node src/bin --e http://localhost:8000/graphql --o ./output",
+    "test-local": "node src/bin --d ~/src/graphql --o ./output"
   },
   "keywords": [
     "apollo-client",
@@ -21,8 +23,10 @@
   "author": "igorrmotta",
   "license": "MIT",
   "dependencies": {
-    "node-fetch": "^1.7.3",
-    "yargs": "^10.0.3"
+    "node-fetch": "1.7.3",
+    "yargs": "10.0.3",
+    "graphql": "0.13.1",
+    "graphql-tools": "2.21.0"
   },
   "repository": {
     "url": "https://github.com/igorrmotta/fetch-fragment-matcher"

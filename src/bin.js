@@ -4,13 +4,19 @@ const yargs = require('yargs');
 const fs = require('fs');
 const path = require('path');
 const process = require('process');
-const { fetchFragmentMatcherData } = require('./index');
+const { fetchFragmentMatcherData, getFragmentMatcherData } = require('./index');
+const { createDirRecursively } = require('./utils');
 
 const argsOptions = {
     endpoint: {
         description: 'Specify the /graphql endpoint that should be used',
         type: 'string',
         alias: 'e'
+    },
+    directory: {
+        description: 'Specify the directory of type definitions',
+        type: 'string',
+        alias: 'd'
     },
     output: {
         description: 'Specify the output dir where the schema fragmentTypes.json file will be created',
@@ -35,35 +41,36 @@ if (process.env.NODE_ENV !== 'test') {
 
 const processArgs = yargsUsage.argv;
 
-if (!processArgs.endpoint) {
-    throw `Please, specify --endpoint or --e`;
+if (!processArgs.endpoint && !processArgs.directory) {
+    throw `Please, specify --endpoint or --e or --directory or --d`;
+}
+
+if (!!processArgs.endpoint && !!processArgs.directory) {
+    throw `Please, specify either endpoint or directory`;
 }
 
 if (!processArgs['output'] && !processArgs['output-file']) {
     throw `Please, specify --output or --output-file`;
 }
 
-const ENDPOINT_URL = processArgs.endpoint;
 const OUTPUT_FILE = path.resolve(
     processArgs['output-file']
         ? processArgs['output-file']
         : `${processArgs['output']}/fragmentTypes.json`
 );
-
 createDirRecursively(path.dirname(OUTPUT_FILE));
 
-fetchFragmentMatcherData(ENDPOINT_URL, OUTPUT_FILE)
-    .then(() => { console.log('Fragment types successfully extracted!'); })
-    .catch((err) => { console.error('Error writing fragmentTypes file', err); });
+if (!!processArgs.endpoint) {
+    // using endpoint
+    const ENDPOINT_URL = processArgs.endpoint;
+    fetchFragmentMatcherData(ENDPOINT_URL, OUTPUT_FILE)
+        .then(() => { console.log('Fragment types successfully extracted!'); })
+        .catch((err) => { console.error('Error writing fragmentTypes file', err); });
+}
 
-function createDirRecursively(dir) {
-    dir
-        .split(path.sep)
-        .reduce((currentPath, folder) => {
-            currentPath += folder + path.sep;
-            if (!fs.existsSync(currentPath)){
-                fs.mkdirSync(currentPath);
-            }
-            return currentPath;
-        }, '');
+if (!!processArgs.directory) {
+    const DIRECTORY = processArgs.directory;
+    getFragmentMatcherData(DIRECTORY, OUTPUT_FILE)
+        .then(() => { console.log('Fragment types successfully extracted!'); })
+        .catch((err) => { console.error('Error writing fragmentTypes file', err); });
 }
