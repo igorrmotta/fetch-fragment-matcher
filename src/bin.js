@@ -30,47 +30,58 @@ const argsOptions = {
     }
 };
 
-const yargsUsage = yargs
-    .usage('$0 <cmd> [args]')
+function createOutput(processArgs) {
+    if (!processArgs['output'] && !processArgs['output-file']) {
+        throw `Please, specify --output or --output-file`;
+    }
+
+    const OUTPUT_FILE = path.resolve(
+        processArgs['output-file']
+            ? processArgs['output-file']
+            : `${processArgs['output']}/fragmentTypes.json`
+    );
+    createDirRecursively(path.dirname(OUTPUT_FILE));
+}
+
+yargs
+    .command(
+        'fetch-fragment-matcher',
+        'fetch fragment matcher from /graphql server endpoint',
+        {},
+        (argv) => {
+            createOutput(argv);
+
+            if (!argv.endpoint) {
+                throw `Please, specify --endpoint or --e`;
+            }
+
+            // using endpoint
+            const ENDPOINT_URL = argv.endpoint;
+            fetchFragmentMatcherData(ENDPOINT_URL, OUTPUT_FILE)
+                .then(() => { console.log('Fragment types successfully extracted!'); })
+                .catch((err) => { console.error('Error writing fragmentTypes file', err); });
+        }
+    )
+    .command(
+        'get-fragment-matcher',
+        'get fragment matcher from local graphql type definitions',
+        {},
+        (argv) => {
+            createOutput(argv);
+
+            if (!argv.directory) {
+                throw `Please, specify --directory or --d`;
+            }
+
+            // using endpoint
+            const DIRECTORY = processArgs.directory;
+            getFragmentMatcherData(DIRECTORY, OUTPUT_FILE)
+                .then(() => { console.log('Fragment types successfully extracted!'); })
+                .catch((err) => { console.error('Error writing fragmentTypes file', err); });
+        }
+    )
     .options(argsOptions)
-    .help();
-
-if (process.env.NODE_ENV !== 'test') {
-    yargsUsage.strict();
-}
-
-const processArgs = yargsUsage.argv;
-
-if (!processArgs.endpoint && !processArgs.directory) {
-    throw `Please, specify --endpoint or --e or --directory or --d`;
-}
-
-if (!!processArgs.endpoint && !!processArgs.directory) {
-    throw `Please, specify either endpoint or directory`;
-}
-
-if (!processArgs['output'] && !processArgs['output-file']) {
-    throw `Please, specify --output or --output-file`;
-}
-
-const OUTPUT_FILE = path.resolve(
-    processArgs['output-file']
-        ? processArgs['output-file']
-        : `${processArgs['output']}/fragmentTypes.json`
-);
-createDirRecursively(path.dirname(OUTPUT_FILE));
-
-if (!!processArgs.endpoint) {
-    // using endpoint
-    const ENDPOINT_URL = processArgs.endpoint;
-    fetchFragmentMatcherData(ENDPOINT_URL, OUTPUT_FILE)
-        .then(() => { console.log('Fragment types successfully extracted!'); })
-        .catch((err) => { console.error('Error writing fragmentTypes file', err); });
-}
-
-if (!!processArgs.directory) {
-    const DIRECTORY = processArgs.directory;
-    getFragmentMatcherData(DIRECTORY, OUTPUT_FILE)
-        .then(() => { console.log('Fragment types successfully extracted!'); })
-        .catch((err) => { console.error('Error writing fragmentTypes file', err); });
-}
+    .help()
+    .version()
+    .strict()
+    .argv;
