@@ -30,26 +30,22 @@ const argsOptions = {
     }
 };
 
-function createOutput(processArgs) {
-    if (!processArgs['output'] && !processArgs['output-file']) {
-        throw `Please, specify --output or --output-file`;
-    }
-
-    const OUTPUT_FILE = path.resolve(
-        processArgs['output-file']
-            ? processArgs['output-file']
-            : `${processArgs['output']}/fragmentTypes.json`
-    );
-    createDirRecursively(path.dirname(OUTPUT_FILE));
-}
-
 yargs
     .command(
         'fetch-fragment-matcher',
         'fetch fragment matcher from /graphql server endpoint',
         {},
         (argv) => {
-            createOutput(argv);
+            if (!argv['output'] && !argv['output-file']) {
+                throw `Please, specify --output or --output-file`;
+            }
+        
+            const OUTPUT_FILE = path.resolve(
+                argv['output-file']
+                    ? argv['output-file']
+                    : `${argv['output']}/fragmentTypes.json`
+            );
+            createDirRecursively(path.dirname(OUTPUT_FILE));
 
             if (!argv.endpoint) {
                 throw `Please, specify --endpoint or --e`;
@@ -67,20 +63,29 @@ yargs
         'get fragment matcher from local graphql type definitions',
         {},
         (argv) => {
-            createOutput(argv);
+            if (!argv['output'] && !argv['output-file']) {
+                throw `Please, specify --output or --output-file`;
+            }
+        
+            const OUTPUT_FILE = path.resolve(
+                argv['output-file']
+                    ? argv['output-file']
+                    : `${argv['output']}/fragmentTypes.json`
+            );
+            createDirRecursively(path.dirname(OUTPUT_FILE));
 
             if (!argv.directory) {
                 throw `Please, specify --directory or --d`;
             }
 
             // using endpoint
-            const DIRECTORY = processArgs.directory;
+            const DIRECTORY = argv.directory;
             getFragmentMatcherData(DIRECTORY, OUTPUT_FILE)
                 .then(() => { console.log('Fragment types successfully extracted!'); })
                 .catch((err) => { console.error('Error writing fragmentTypes file', err); });
         }
     )
-    .options(argsOptions)
+    .option(argsOptions)
     .help()
     .version()
     .strict()
