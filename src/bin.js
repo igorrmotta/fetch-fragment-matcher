@@ -32,7 +32,7 @@ const argsOptions = {
 
 yargs
     .command(
-        'fetch-fragment-matcher',
+        'fetch',
         'fetch fragment matcher from /graphql server endpoint',
         {},
         (argv) => {
@@ -59,7 +59,7 @@ yargs
         }
     )
     .command(
-        'get-fragment-matcher',
+        'get',
         'get fragment matcher from local graphql type definitions',
         {},
         (argv) => {

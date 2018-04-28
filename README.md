@@ -15,8 +15,8 @@ Right now, this is something you'll need to do by hand – i.e. if you revise yo
     
     [Input - one of the two options]
     
-    * --e (--endpoint): The graphql server endpoint
-    * --d (--directory): The folder directory that contains `.gql | .graphql` type definitions 
+    * `fetch --e` (--endpoint): The graphql server endpoint
+    * `get --d` (--directory): The folder directory that contains `.gql | .graphql` type definitions 
 
     [Output]
 
