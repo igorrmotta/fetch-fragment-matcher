@@ -21,6 +21,7 @@ const introspectionQuery = `
 `;
 
 module.exports.fetchFragmentMatcherData = (url, file) => {
+    console.info(`fetching ${url} and output ${file}`);
     return fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -33,6 +34,7 @@ module.exports.fetchFragmentMatcherData = (url, file) => {
 };
 
 module.exports.getFragmentMatcherData = (path, file) => {
+    console.info(`fetching ${path} and output ${file}`);
     return new Promise((resolve, reject) => {
         try {
             const files = klawSync(path, /\.(graphql|gql)$/);

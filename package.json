@@ -1,12 +1,15 @@
 {
   "name": "fetch-fragment-matcher",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Fetch a graphql endpoint to generate the fragmentTypes for apollo-client",
   "main": "src/index.js",
-  "bin": "src/bin.js",
+  "bin": {
+    "get-fragment-matcher": "src/bin.js get-fragment-matcher",
+    "fetch-fragment-matcher": "src/bin.js fetch-fragment-matcher"
+  },
   "scripts": {
-    "test-fetch": "node src/bin --e http://localhost:8000/graphql --o ./output",
-    "test-local": "node src/bin --d ~/src/graphql --o ./output"
+    "test-fetch": "node src/bin fetch-fragment-matcher --e http://localhost:8000/graphql --o ./output",
+    "test-local": "node src/bin get-fragment-matcher --d ~/src/graphql --o ./output"
   },
   "keywords": [
     "apollo-client",
